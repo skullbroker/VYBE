@@ -551,11 +551,46 @@ p {
     border-color: #453d72;
 }
 
+.content-image-wrap {
+    position: relative;
+}
+
 .content-image {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
     background: var(--surface-2);
+}
+
+.trailer-badge {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    background: rgba(11, 10, 19, .82);
+    border: 1px solid rgba(255, 255, 255, .18);
+    color: var(--text);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    border-radius: 999px;
+    padding: 4px 11px;
+    backdrop-filter: blur(4px);
+}
+
+.trailer-link {
+    margin-top: 14px;
+    font-size: .86rem;
+}
+
+.trailer-link a {
+    color: var(--mint);
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.trailer-link a:hover {
+    text-decoration: underline;
 }
 
 .content-info {
@@ -949,9 +984,16 @@ p {
 .player-stage {
     position: relative;
     aspect-ratio: 16 / 9;
-    display: grid;
-    place-items: center;
     overflow: hidden;
+    background: #000;
+}
+
+.player-stage iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 .player-stage img {
@@ -965,7 +1007,10 @@ p {
 }
 
 .player-overlay {
-    position: relative;
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
     text-align: center;
     padding: 20px;
 }
@@ -998,22 +1043,22 @@ p {
     50%      { box-shadow: 0 0 0 16px rgba(255, 61, 110, 0); }
 }
 
-.player-bar {
-    height: 4px;
-    background: var(--surface-2);
-    position: relative;
-    overflow: hidden;
+.player-footer {
+    padding: 18px 24px 22px;
 }
 
-.player-bar i {
-    position: absolute;
-    inset: 0 100% 0 0;
-    background: var(--accent);
-    animation: seek 14s linear forwards;
+.player-footer h3 {
+    font-size: 1.2rem;
 }
 
-@keyframes seek {
-    to { right: 0; }
+.player-footer p {
+    color: var(--muted);
+    font-size: .85rem;
+    margin-top: 4px;
+}
+
+.player-footer .trailer-link {
+    margin-top: 10px;
 }
 
 /* =========================================================

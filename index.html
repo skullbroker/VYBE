@@ -372,6 +372,9 @@
 
                 <input type="url" id="contentImage" placeholder="Image URL (https://...)" required>
 
+                <input type="url" id="contentTrailer"
+                       placeholder="Trailer URL — YouTube link (optional)">
+
                 <textarea id="contentDescription" placeholder="Short description" required></textarea>
 
                 <button type="submit" class="primary-btn">Add content</button>
@@ -425,6 +428,8 @@
 
             <div class="modal-meta" id="modalMeta"></div>
 
+            <p id="modalTrailerLink" class="trailer-link hidden"></p>
+
             <div class="modal-actions">
                 <button id="watchBtn" class="primary-btn">▶ Watch</button>
                 <button id="saveBtn" class="primary-btn">+ Save</button>
@@ -446,16 +451,15 @@
 
         <button id="closePlayer" class="close-btn" aria-label="Close player">×</button>
 
-        <div class="player-stage">
-            <img id="playerImage" src="" alt="">
-            <div class="player-overlay">
-                <div class="player-pulse" aria-hidden="true">▶</div>
+        <div class="player-stage" id="playerStage"></div>
+
+        <div class="player-footer">
+            <div class="player-footer-text">
                 <h3 id="playerTitle"></h3>
                 <p id="playerMeta"></p>
             </div>
+            <p id="playerLinkRow" class="trailer-link hidden"></p>
         </div>
-
-        <div class="player-bar"><i></i></div>
 
     </div>
 
