@@ -996,6 +996,27 @@ p {
     border: 0;
 }
 
+#ytMount {
+    position: absolute;
+    inset: 0;
+}
+
+.player-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: #000;
+}
+
+.player-loading p {
+    color: var(--muted);
+    font-size: .85rem;
+    margin-top: 4px;
+}
+
 .player-stage img {
     position: absolute;
     inset: 0;

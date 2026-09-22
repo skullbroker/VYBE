@@ -929,6 +929,7 @@ function closeModal(modal) {
     if (!modal) return;
     modal.classList.add("hidden");
     if (modal === playerModal) {
+        stopTrailer();
         var stage = $("playerStage");
         if (stage) stage.innerHTML = "";
     }
@@ -941,6 +942,7 @@ function closeAllModals() {
     [contentModal, playerModal, profileModal].forEach(function (m) {
         if (m) m.classList.add("hidden");
     });
+    stopTrailer();
     var stage = $("playerStage");
     if (stage) stage.innerHTML = "";
     document.body.classList.remove("no-scroll");
@@ -1187,6 +1189,143 @@ modalSaveBtn.addEventListener("click", function () {
 
 
 /* =========================================================
+   17b. YOUTUBE IFRAME API
+   Loaded once, lazily, the first time a trailer is played.
+   Resolves once YT.Player is usable; rejects if the script
+   never loads (blocked network, sandboxed preview, etc.)
+   within a few seconds, so the UI never sits on a blank box.
+   ========================================================= */
+
+var ytApiPromise = null;
+
+function loadYouTubeApi() {
+
+    if (ytApiPromise) return ytApiPromise;
+
+    ytApiPromise = new Promise(function (resolve, reject) {
+
+        if (window.YT && window.YT.Player) {
+            resolve();
+            return;
+        }
+
+        var settled = false;
+
+        var timer = window.setTimeout(function () {
+            if (settled) return;
+            settled = true;
+            reject(new Error("timeout"));
+        }, 6000);
+
+        var previous = window.onYouTubeIframeAPIReady;
+
+        window.onYouTubeIframeAPIReady = function () {
+            if (typeof previous === "function") previous();
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(timer);
+            resolve();
+        };
+
+        var tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+
+        tag.onerror = function () {
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(timer);
+            reject(new Error("blocked"));
+        };
+
+        document.head.appendChild(tag);
+    });
+
+    return ytApiPromise;
+}
+
+
+var activePlayer = null;
+
+function stopTrailer() {
+    if (activePlayer && typeof activePlayer.destroy === "function") {
+        try { activePlayer.destroy(); } catch (err) { /* ignore */ }
+    }
+    activePlayer = null;
+}
+
+function showPlayerFallback(content, reason) {
+
+    var stage = $("playerStage");
+    if (!stage) return;
+
+    stage.innerHTML =
+        '<img src="' + esc(content.image) + '" alt="" data-fallback="1">' +
+        '<div class="player-overlay">' +
+            '<div class="player-pulse" aria-hidden="true">▶</div>' +
+            '<h3>' + esc(content.title) + '</h3>' +
+            '<p>' + esc(reason) + '</p>' +
+        '</div>';
+}
+
+function playTrailer(content) {
+
+    var videoId = extractYouTubeId(content.trailer);
+    var stage = $("playerStage");
+
+    stopTrailer();
+
+    if (!videoId) {
+        showPlayerFallback(content, "No trailer on file for this title yet.");
+        $("playerLinkRow").innerHTML = "";
+        $("playerLinkRow").classList.add("hidden");
+        return;
+    }
+
+    stage.innerHTML =
+        '<div class="player-loading">' +
+            '<div class="player-pulse" aria-hidden="true">▶</div>' +
+            '<p>Loading trailer…</p>' +
+        '</div>' +
+        '<div id="ytMount"></div>';
+
+    $("playerLinkRow").innerHTML =
+        '<a href="' + esc(content.trailer) + '" target="_blank" rel="noopener noreferrer">' +
+            'Open on YouTube ↗' +
+        '</a>';
+    $("playerLinkRow").classList.remove("hidden");
+
+    loadYouTubeApi().then(function () {
+
+        /* The modal may have been closed while the API was loading. */
+        if (!$("ytMount")) return;
+
+        activePlayer = new YT.Player("ytMount", {
+            videoId: videoId,
+            playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
+            events: {
+                onReady: function (event) {
+                    event.target.playVideo();
+                    var loading = stage.querySelector(".player-loading");
+                    if (loading) loading.remove();
+                },
+                onError: function () {
+                    /* Error 101 / 150 = embedding disabled by the owner.
+                       Others = removed, private, or region-blocked. */
+                    showPlayerFallback(content,
+                        "This trailer can't play here — the owner has disabled " +
+                        "embedding, or the video is unavailable. Use the link below.");
+                }
+            }
+        });
+
+    }).catch(function () {
+        showPlayerFallback(content,
+            "Couldn't reach YouTube from this page. Use the link below to watch it there.");
+    });
+}
+
+
+/* =========================================================
    18. PLAYER
    ========================================================= */
 
@@ -1217,38 +1356,10 @@ $("watchBtn").addEventListener("click", function () {
         content.category + " · " + content.creator +
         (content.duration ? " · " + content.duration : "");
 
-    var videoId = extractYouTubeId(content.trailer);
-    var stage = $("playerStage");
-
-    if (videoId) {
-        stage.innerHTML =
-            '<iframe' +
-                ' src="https://www.youtube-nocookie.com/embed/' + esc(videoId) +
-                    '?autoplay=1&rel=0&modestbranding=1"' +
-                ' title="' + esc(content.title) + ' trailer"' +
-                ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
-                ' allowfullscreen' +
-                ' loading="lazy">' +
-            '</iframe>';
-        $("playerLinkRow").innerHTML =
-            '<a href="' + esc(content.trailer) + '" target="_blank" rel="noopener noreferrer">' +
-                'Open on YouTube ↗' +
-            '</a>';
-        $("playerLinkRow").classList.remove("hidden");
-    } else {
-        stage.innerHTML =
-            '<img src="' + esc(content.image) + '" alt="" data-fallback="1">' +
-            '<div class="player-overlay">' +
-                '<div class="player-pulse" aria-hidden="true">▶</div>' +
-                '<h3>' + esc(content.title) + '</h3>' +
-                '<p>No trailer on file for this title yet.</p>' +
-            '</div>';
-        $("playerLinkRow").innerHTML = "";
-        $("playerLinkRow").classList.add("hidden");
-    }
-
     openModal(playerModal);
     $("closePlayer").focus();
+
+    playTrailer(content);
 
     renderHome();
     updateProfile();
