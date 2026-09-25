@@ -126,7 +126,7 @@ var defaultContent = [
         description: "Football highlights, analysis and memorable moments.",
         duration: "52m",
         year: 2025,
-        trailer: "https://www.youtube.com/watch?v=ucNQuhxZGKc"
+        trailer: "https://youtu.be/Xbizke4zftY?si=8Am46eRs4-tDqYOL"
     }
 ];
 
