@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VYBE — Unified Video Streaming Platform</title>
+    <meta name="description" content="VYBE brings movies, sports, music and creator videos together in one place.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= LOGIN / REGISTER ================= -->
+
+<section id="authPage" class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+            <h1>VYBE</h1>
+            <p>One platform. Every kind of video.</p>
+            <span>Movies • Sports • Music • Creators</span>
+        </div>
+
+        <!-- Login -->
+        <div id="loginBox" class="auth-box">
+
+            <h2>Welcome back</h2>
+            <p class="auth-subtitle">Log in to continue to VYBE</p>
+
+            <form id="loginForm" novalidate>
+
+                <label class="visually-hidden" for="loginEmail">Email address</label>
+                <input type="email" id="loginEmail" placeholder="Email address"
+                       autocomplete="email" required>
+
+                <label class="visually-hidden" for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Password"
+                       autocomplete="current-password" required>
+
+                <button type="submit" class="primary-btn">Log in</button>
+
+                <a href="#" id="adminLoginBtn" class="admin-login-link">Log in as admin</a>
+
+            </form>
+
+            <p id="loginMessage" class="message" role="status"></p>
+
+            <p class="switch-text">
+                Don't have an account?
+                <button type="button" id="showRegister">Create one</button>
+            </p>
+
+            <p class="admin-hint">
+                Demo accounts — user <code>aarav@gmail.com</code> / <code>123456</code>,
+                admin <code>admin@vybe.com</code> / <code>admin123</code>
+            </p>
+
+        </div>
+
+        <!-- Register -->
+        <div id="registerBox" class="auth-box hidden">
+
+            <h2>Create account</h2>
+            <p class="auth-subtitle">Join VYBE today</p>
+
+            <form id="registerForm" novalidate>
+
+                <label class="visually-hidden" for="registerName">Full name</label>
+                <input type="text" id="registerName" placeholder="Full name"
+                       autocomplete="name" required>
+
+                <label class="visually-hidden" for="registerEmail">Email address</label>
+                <input type="email" id="registerEmail" placeholder="Email address"
+                       autocomplete="email" required>
+
+                <label class="visually-hidden" for="registerPassword">Create password</label>
+                <input type="password" id="registerPassword" placeholder="Create password"
+                       autocomplete="new-password" required>
+
+                <label class="visually-hidden" for="confirmPassword">Confirm password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm password"
+                       autocomplete="new-password" required>
+
+                <button type="submit" class="primary-btn">Create account</button>
+
+            </form>
+
+            <p id="registerMessage" class="message" role="status"></p>
+
+            <p class="switch-text">
+                Already have an account?
+                <button type="button" id="showLogin">Log in</button>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= USER APPLICATION ================= -->
+
+<section id="userApp" class="app hidden">
+
+    <!-- ================= NAVIGATION ================= -->
+
+    <header class="navbar">
+
+        <div class="logo">VYBE</div>
+
+        <nav aria-label="Main">
+            <button class="nav-btn active" data-section="homeSection">Home</button>
+            <button class="nav-btn" data-section="searchSection">Search</button>
+            <button class="nav-btn" data-section="moviesSection">Movies</button>
+            <button class="nav-btn" data-section="sportsSection">Sports</button>
+            <button class="nav-btn" data-section="musicSection">Music</button>
+            <button class="nav-btn" data-section="creatorsSection">Creators</button>
+            <button class="nav-btn" data-section="watchlistSection">Watchlist</button>
+        </nav>
+
+        <div class="nav-right">
+            <button id="profileBtn" class="profile-btn">Profile</button>
+            <button id="logoutBtn" class="logout-btn">Log out</button>
+        </div>
+
+    </header>
+
+
+    <!-- ================= HOME ================= -->
+
+    <main id="homeSection" class="page-section">
+
+        <section class="hero" id="heroBanner">
+
+            <div class="hero-content">
+
+                <span class="hero-tag" id="heroTag">VYBE ORIGINAL</span>
+
+                <h1 id="heroTitle">Find your next VYBE</h1>
+
+                <p id="heroText">
+                    Movies, sports, music and creator videos in one place —
+                    pick a mood and press play.
+                </p>
+
+                <div class="hero-actions">
+                    <button class="primary-btn" id="heroWatchBtn">▶ Watch now</button>
+                    <button class="secondary-btn" id="heroExploreBtn">Browse everything</button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Continue watching -->
+
+        <section class="content-section">
+            <div class="section-heading">
+                <h2>Continue watching</h2>
+                <span>Pick up where you left off</span>
+            </div>
+            <div id="continueGrid" class="content-grid"></div>
+        </section>
+
+
+        <!-- Trending -->
+
+        <section class="content-section">
+            <div class="section-heading">
+                <h2>Trending now</h2>
+                <span>Most viewed on VYBE this week</span>
+            </div>
+            <div id="trendingGrid" class="content-grid"></div>
+        </section>
+
+
+        <!-- Recommended -->
+
+        <section class="content-section">
+            <div class="section-heading">
+                <h2>Recommended for you</h2>
+                <span>Based on what you've liked and saved</span>
+            </div>
+            <div id="recommendedGrid" class="content-grid"></div>
+        </section>
+
+    </main>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <main id="searchSection" class="page-section hidden">
+
+        <section class="search-page">
+
+            <div class="search-hero">
+
+                <h1>Search</h1>
+                <p>Movies, sports, music, creators and more</p>
+
+                <div class="netflix-search-box">
+                    <span class="search-icon" aria-hidden="true">⌕</span>
+                    <label class="visually-hidden" for="searchPageInput">Search VYBE</label>
+                    <input type="text" id="searchPageInput"
+                           placeholder="Titles, people, genres..." autocomplete="off">
+                    <button type="button" id="clearSearchBtn" class="clear-search-btn"
+                            aria-label="Clear search">×</button>
+                </div>
+
+                <div class="filter-row" id="searchFilters">
+                    <button class="filter-chip active" data-filter="All">All</button>
+                    <button class="filter-chip" data-filter="Movies">Movies</button>
+                    <button class="filter-chip" data-filter="Sports">Sports</button>
+                    <button class="filter-chip" data-filter="Music">Music</button>
+                    <button class="filter-chip" data-filter="Creators">Creators</button>
+                </div>
+
+            </div>
+
+            <div class="search-results-section">
+
+                <div class="search-results-header">
+                    <h2 id="searchResultsTitle">Explore VYBE</h2>
+                    <span id="searchResultsCount">All content</span>
+                </div>
+
+                <div id="searchResultsGrid" class="content-grid"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= MOVIES ================= -->
+
+    <main id="moviesSection" class="page-section hidden">
+        <section class="content-section">
+            <div class="section-heading">
+                <h1>Movies &amp; series</h1>
+                <span>Cinematic VYBE</span>
+            </div>
+            <div id="moviesGrid" class="content-grid"></div>
+        </section>
+    </main>
+
+
+    <!-- ================= SPORTS ================= -->
+
+    <main id="sportsSection" class="page-section hidden">
+        <section class="content-section">
+            <div class="section-heading">
+                <h1>Sports</h1>
+                <span>Cricket • F1 • Football</span>
+            </div>
+            <div id="sportsGrid" class="content-grid"></div>
+        </section>
+    </main>
+
+
+    <!-- ================= MUSIC ================= -->
+
+    <main id="musicSection" class="page-section hidden">
+        <section class="content-section">
+            <div class="section-heading">
+                <h1>Music</h1>
+                <span>Songs • Albums • Concerts</span>
+            </div>
+            <div id="musicGrid" class="content-grid"></div>
+        </section>
+    </main>
+
+
+    <!-- ================= CREATORS ================= -->
+
+    <main id="creatorsSection" class="page-section hidden">
+        <section class="content-section">
+            <div class="section-heading">
+                <h1>Creators</h1>
+                <span>Discover original creators</span>
+            </div>
+            <div id="creatorsGrid" class="content-grid"></div>
+        </section>
+    </main>
+
+
+    <!-- ================= WATCHLIST ================= -->
+
+    <main id="watchlistSection" class="page-section hidden">
+        <section class="content-section">
+            <div class="section-heading">
+                <h1>My watchlist</h1>
+                <span>Everything you've saved</span>
+            </div>
+            <div id="watchlistGrid" class="content-grid"></div>
+        </section>
+    </main>
+
+</section>
+
+
+<!-- ================= ADMIN APPLICATION ================= -->
+
+<section id="adminApp" class="admin-app hidden">
+
+    <header class="admin-navbar">
+        <div class="logo">VYBE <span>ADMIN</span></div>
+        <div style="margin-left:auto">
+            <button id="adminLogoutBtn" class="logout-btn">Log out</button>
+        </div>
+    </header>
+
+    <main class="admin-container">
+
+        <div class="admin-header">
+            <h1>Admin dashboard</h1>
+            <p>Add, review and remove the content people see on VYBE.</p>
+        </div>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <span>Registered users</span>
+                <strong id="totalUsers">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Total titles</span>
+                <strong id="totalContent">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Movies</span>
+                <strong id="totalMovies">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Sports</span>
+                <strong id="totalSports">0</strong>
+            </div>
+
+        </div>
+
+
+        <!-- ================= ADD CONTENT ================= -->
+
+        <section class="admin-panel">
+
+            <h2>Add new content</h2>
+
+            <form id="contentForm" class="content-form" novalidate>
+
+                <input type="text" id="contentTitle" placeholder="Content title" required>
+
+                <select id="contentCategory" required>
+                    <option value="">Select category</option>
+                    <option value="Movies">Movies</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Music">Music</option>
+                    <option value="Creators">Creators</option>
+                </select>
+
+                <input type="text" id="contentCreator" placeholder="Creator / artist" required>
+
+                <input type="url" id="contentImage" placeholder="Image URL (https://...)" required>
+
+                <input type="url" id="contentTrailer"
+                       placeholder="Trailer URL — YouTube or Google Drive link (optional)">
+
+                <textarea id="contentDescription" placeholder="Short description" required></textarea>
+
+                <button type="submit" class="primary-btn">Add content</button>
+
+            </form>
+
+            <p id="adminMessage" class="message" role="status"></p>
+
+        </section>
+
+
+        <!-- ================= CONTENT MANAGEMENT ================= -->
+
+        <section class="admin-panel">
+            <h2>Manage content</h2>
+            <div id="adminContentList" class="admin-list"></div>
+        </section>
+
+
+        <!-- ================= USER MANAGEMENT ================= -->
+
+        <section class="admin-panel">
+            <h2>Registered users</h2>
+            <div id="adminUserList" class="admin-list"></div>
+        </section>
+
+    </main>
+
+</section>
+
+
+<!-- ================= CONTENT MODAL ================= -->
+
+<div id="contentModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+    <div class="modal-content">
+
+        <button id="closeModal" class="close-btn" aria-label="Close">×</button>
+
+        <img id="modalImage" src="" alt="">
+
+        <div class="modal-info">
+
+            <span id="modalCategory"></span>
+
+            <h2 id="modalTitle"></h2>
+
+            <p id="modalCreator"></p>
+
+            <p id="modalDescription"></p>
+
+            <div class="modal-meta" id="modalMeta"></div>
+
+            <p id="modalTrailerLink" class="trailer-link hidden"></p>
+
+            <div class="modal-actions">
+                <button id="watchBtn" class="primary-btn">▶ Watch</button>
+                <button id="saveBtn" class="primary-btn">+ Save</button>
+                <button id="likeBtn" class="secondary-btn">♡ Like</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PLAYER MODAL ================= -->
+
+<div id="playerModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="playerTitle">
+
+    <div class="modal-content player-modal">
+
+        <button id="closePlayer" class="close-btn" aria-label="Close player">×</button>
+
+        <div class="player-stage" id="playerStage"></div>
+
+        <div class="player-footer">
+            <div class="player-footer-text">
+                <h3 id="playerTitle"></h3>
+                <p id="playerMeta"></p>
+            </div>
+            <p id="playerLinkRow" class="trailer-link hidden"></p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PROFILE MODAL ================= -->
+
+<div id="profileModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="profileName">
+
+    <div class="modal-content profile-modal">
+
+        <button id="closeProfile" class="close-btn" aria-label="Close">×</button>
+
+        <h2>My profile</h2>
+
+        <div class="profile-info">
+            <div class="profile-avatar" id="profileAvatar">A</div>
+            <h3 id="profileName">User</h3>
+            <p id="profileEmail">user@example.com</p>
+        </div>
+
+        <div class="profile-stats">
+            <div class="profile-stat">
+                <strong id="profileSaved">0</strong>
+                <span>Saved</span>
+            </div>
+            <div class="profile-stat">
+                <strong id="profileLiked">0</strong>
+                <span>Liked</span>
+            </div>
+            <div class="profile-stat">
+                <strong id="profileWatched">0</strong>
+                <span>Watched</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TOASTS ================= -->
+
+<div id="toastStack" class="toast-stack" aria-live="polite"></div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="script.js"></script>
+
+</body>
+</html>
